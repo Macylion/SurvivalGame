@@ -24,6 +24,8 @@ public class SurvivalGame extends ApplicationAdapter {
 	Vector2 camPos;
 	Rectangle camRec;
 
+	float zoom = 1;
+
 	World world;
 	
 	@Override
@@ -37,7 +39,6 @@ public class SurvivalGame extends ApplicationAdapter {
 		camPos = new Vector2(0, 0);
 		camRec = new Rectangle(0, 0, width, height);
 		loadTextures();
-		cam.zoom = 1;
 
 		world = new World();
 	}
@@ -62,11 +63,14 @@ public class SurvivalGame extends ApplicationAdapter {
 			camPos.x -= camSpeed;
 		if(Gdx.input.isKeyPressed(Input.Keys.D))
 			camPos.x += camSpeed;
-		if(Gdx.input.isButtonJustPressed(Input.Keys.E))
-			cam.zoom += 0.1f;
-		if(Gdx.input.isButtonJustPressed(Input.Keys.Q))
-			cam.zoom -= 0.1f;
-
+		if(Gdx.input.isKeyJustPressed(Input.Keys.MINUS) && zoom < 4) {
+			zoom += 0.2f;
+			cam.zoom = zoom;
+		}
+		if(Gdx.input.isKeyJustPressed(Input.Keys.PLUS) && zoom > 0.4f) {
+			zoom -= 0.2f;
+			cam.zoom = zoom;
+		}
 
 		cam.position.set(camPos, 0);
 	}

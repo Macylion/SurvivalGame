@@ -8,36 +8,52 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class SurvivalGame extends ApplicationAdapter {
+
+	final int width = 1280;
+	final int height = 720;
+
 	SpriteBatch batch;
-	Texture img;
 	Viewport vp;
-	Camera cam;
+	OrthographicCamera cam;
 	Vector2 camPos;
+	Rectangle camRec;
+
+	World world;
 	
 	@Override
 	public void create () {
+		TextureManager.init();
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
-		vp = new FitViewport(1280, 720);
+		vp = new FitViewport(width, height);
 		cam = new OrthographicCamera();
 		vp.setCamera(cam);
 		vp.apply();
 		camPos = new Vector2(0, 0);
+		camRec = new Rectangle(0, 0, width, height);
+		loadTextures();
+		cam.zoom = 1;
+
+		world = new World();
 	}
 
 	private void update () {
 		cam.update();
+		camRec.setX(cam.position.x - (width/2));
+		camRec.setY(cam.position.y - (height/2));
 		batch.setProjectionMatrix(cam.combined);
 
+		world.update();
+
 		//camera movement
-		float camSpeed = 128 * Gdx.graphics.getDeltaTime();
+		float camSpeed = 256 * Gdx.graphics.getDeltaTime();
 		if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT))
-			camSpeed *= 2;
+			camSpeed *= 4;
 		if(Gdx.input.isKeyPressed(Input.Keys.S))
 			camPos.y -= camSpeed;
 		if(Gdx.input.isKeyPressed(Input.Keys.W))
@@ -46,6 +62,11 @@ public class SurvivalGame extends ApplicationAdapter {
 			camPos.x -= camSpeed;
 		if(Gdx.input.isKeyPressed(Input.Keys.D))
 			camPos.x += camSpeed;
+		if(Gdx.input.isButtonJustPressed(Input.Keys.E))
+			cam.zoom += 0.1f;
+		if(Gdx.input.isButtonJustPressed(Input.Keys.Q))
+			cam.zoom -= 0.1f;
+
 
 		cam.position.set(camPos, 0);
 	}
@@ -56,13 +77,44 @@ public class SurvivalGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(img, 0, 0);
+		world.render(batch, camRec);
 		batch.end();
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+	}
+
+	public void loadTextures() {
+		//characters
+		TextureManager.addTexture("hero.png", "hero");
+		//tiles
+		TextureManager.addTexture("tiles/row-1-col-1.png", "1x1");
+		TextureManager.addTexture("tiles/row-1-col-2.png", "1x2");
+		TextureManager.addTexture("tiles/row-1-col-3.png", "1x3");
+		TextureManager.addTexture("tiles/row-1-col-4.png", "1x4");
+		TextureManager.addTexture("tiles/row-1-col-5.png", "1x5");
+		TextureManager.addTexture("tiles/row-1-col-6.png", "1x6");
+
+		TextureManager.addTexture("tiles/row-2-col-1.png", "2x1");
+		TextureManager.addTexture("tiles/row-2-col-2.png", "2x2");
+		TextureManager.addTexture("tiles/row-2-col-3.png", "2x3");
+		TextureManager.addTexture("tiles/row-2-col-4.png", "2x4");
+		TextureManager.addTexture("tiles/row-2-col-5.png", "2x5");
+		TextureManager.addTexture("tiles/row-2-col-6.png", "2x6");
+
+		TextureManager.addTexture("tiles/row-3-col-1.png", "3x1");
+		TextureManager.addTexture("tiles/row-3-col-2.png", "3x2");
+		TextureManager.addTexture("tiles/row-3-col-3.png", "3x3");
+		TextureManager.addTexture("tiles/row-3-col-4.png", "3x4");
+
+		TextureManager.addTexture("tiles/row-4-col-1.png", "4x1");
+		TextureManager.addTexture("tiles/row-4-col-2.png", "4x2");
+		TextureManager.addTexture("tiles/row-4-col-3.png", "4x3");
+		TextureManager.addTexture("tiles/row-4-col-4.png", "4x4");
+
+		TextureManager.addTexture("tiles/row-5-col-1.png", "5x1");
+		TextureManager.addTexture("tiles/row-5-col-2.png", "5x2");
 	}
 }

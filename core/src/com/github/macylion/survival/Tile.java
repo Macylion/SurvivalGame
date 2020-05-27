@@ -8,8 +8,10 @@ public class Tile extends Rectangle {
 
     private String textureKey;
     private Vector2 position;
+    private boolean isWater;
 
-    public Tile (String textureKey, Vector2 position) {
+
+    public Tile (String textureKey, Vector2 position, boolean isWater) {
         super();
         this.textureKey = textureKey;
         this.position = position;
@@ -17,6 +19,7 @@ public class Tile extends Rectangle {
         this.y = position.y * 16;
         this.width = 16;
         this.height = 16;
+        this.isWater = isWater;
     }
 
     public String getTextureKey() {
@@ -29,6 +32,10 @@ public class Tile extends Rectangle {
 
     public Vector2 getPosition() {
         return position;
+    }
+
+    public boolean isWater() {
+        return isWater;
     }
 
     @Override

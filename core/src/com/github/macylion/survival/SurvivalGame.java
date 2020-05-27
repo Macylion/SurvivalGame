@@ -15,14 +15,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class SurvivalGame extends ApplicationAdapter {
 
-	final int width = 1280;
-	final int height = 720;
+	final int width = 800;
+	final int height = 450;
 
 	SpriteBatch batch;
 	Viewport vp;
+
 	OrthographicCamera cam;
 	Vector2 camPos;
 	Rectangle camRec;
+	Vector2 minCamPos;
+	Vector2 maxCamPos;
 
 	float zoom = 1;
 
@@ -36,11 +39,14 @@ public class SurvivalGame extends ApplicationAdapter {
 		cam = new OrthographicCamera();
 		vp.setCamera(cam);
 		vp.apply();
-		camPos = new Vector2(0, 0);
 		camRec = new Rectangle(0, 0, width, height);
 		loadTextures();
 
 		world = new World();
+
+		camPos = new Vector2(world.getSize().x*16 / 2, world.getSize().y*16 / 2);
+		minCamPos = new Vector2(width/2 + 16, height/2 + 16);
+		maxCamPos = new Vector2(world.getSize().x*16 - width/2 - 16, world.getSize().y*16 - height/2 - 16);
 	}
 
 	private void update () {
@@ -53,17 +59,17 @@ public class SurvivalGame extends ApplicationAdapter {
 
 		//camera movement
 		float camSpeed = 256 * Gdx.graphics.getDeltaTime();
-		if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT))
+		if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT))
 			camSpeed *= 4;
-		if(Gdx.input.isKeyPressed(Input.Keys.S))
+		if(Gdx.input.isKeyPressed(Input.Keys.DOWN) && camPos.y > minCamPos.y)
 			camPos.y -= camSpeed;
-		if(Gdx.input.isKeyPressed(Input.Keys.W))
+		if(Gdx.input.isKeyPressed(Input.Keys.UP) && camPos.y < maxCamPos.y)
 			camPos.y += camSpeed;
-		if(Gdx.input.isKeyPressed(Input.Keys.A))
+		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)&& camPos.x > minCamPos.x)
 			camPos.x -= camSpeed;
-		if(Gdx.input.isKeyPressed(Input.Keys.D))
+		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && camPos.x < maxCamPos.x)
 			camPos.x += camSpeed;
-		if(Gdx.input.isKeyJustPressed(Input.Keys.MINUS) && zoom < 4) {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.MINUS) && zoom < 1) {
 			zoom += 0.2f;
 			cam.zoom = zoom;
 		}
@@ -112,6 +118,7 @@ public class SurvivalGame extends ApplicationAdapter {
 		TextureManager.addTexture("tiles/row-3-col-2.png", "3x2");
 		TextureManager.addTexture("tiles/row-3-col-3.png", "3x3");
 		TextureManager.addTexture("tiles/row-3-col-4.png", "3x4");
+		TextureManager.addTexture("tiles/row-3-col-5.png", "3x5");
 
 		TextureManager.addTexture("tiles/row-4-col-1.png", "4x1");
 		TextureManager.addTexture("tiles/row-4-col-2.png", "4x2");
@@ -120,5 +127,8 @@ public class SurvivalGame extends ApplicationAdapter {
 
 		TextureManager.addTexture("tiles/row-5-col-1.png", "5x1");
 		TextureManager.addTexture("tiles/row-5-col-2.png", "5x2");
+
+		for(int i = 0; i <= 16; i++)
+			TextureManager.addTexture("temptiles/"+i+".png", "t"+i);
 	}
 }

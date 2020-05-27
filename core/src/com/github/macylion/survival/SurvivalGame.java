@@ -99,6 +99,7 @@ public class SurvivalGame extends ApplicationAdapter {
 	public void loadTextures() {
 		//characters
 		TextureManager.addTexture("hero.png", "hero");
+		TextureManager.addTexture("bandit.png", "bandit");
 		//tiles
 		TextureManager.addTexture("tiles/row-1-col-1.png", "1x1");
 		TextureManager.addTexture("tiles/row-1-col-2.png", "1x2");
